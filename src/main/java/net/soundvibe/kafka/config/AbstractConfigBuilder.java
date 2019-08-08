@@ -1,7 +1,8 @@
 package net.soundvibe.kafka.config;
 
 import org.apache.kafka.clients.*;
-import org.apache.kafka.common.metrics.*;
+import org.apache.kafka.common.metrics.Sensor;
+import org.apache.kafka.common.security.auth.SecurityProtocol;
 
 import java.time.Duration;
 import java.util.*;
@@ -157,13 +158,23 @@ public class AbstractConfigBuilder<T extends AbstractConfigBuilder<T>> implement
     }
 
     /**
+     * Protocol used to communicate with brokers.
+     */
+    public T withSecurityProtocol(SecurityProtocol securityProtocol) {
+        props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, securityProtocol.name);
+        return (T) this;
+    }
+
+    /**
      * Builds config into java.util.Properties class to use with Kafka consumers, producers or admin clients
      * @return properties
      */
     @Override
     public Properties buildProperties() {
         Properties properties = new Properties();
-        properties.putAll(props);
+        props.entrySet().stream()
+                .filter(e -> e.getValue() != null)
+                .forEach(e -> properties.put(e.getKey(), e.getValue()));
         return properties;
     }
 

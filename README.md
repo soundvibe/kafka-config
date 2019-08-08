@@ -14,6 +14,12 @@ This introduces such issues as the lack of type-safety, possible mi-spelling of 
 `kafka-config` tries to address these issues by providing simple builders to construct kafka configuration easier and safer.
 Also, listing and searching for all available configuration parameters is much easier because of auto-completion.
 
+Supported clients:
+ * KafkaConsumer
+ * KafkaProducer
+ * KafkaStreams
+ * AdminClient 
+
 ## Examples
 ```java
 public static KafkaConsumer<String,String> createConsumer() {
@@ -98,7 +104,7 @@ Binaries and dependency information for Maven, Ivy, Gradle and others can be fou
 Example for Gradle:
 
 ```groovy
-compile 'net.soundvibe:kafka-config:1.0.0'
+compile 'net.soundvibe:kafka-config:1.0.1'
 ```
 
 and for Maven:
@@ -107,7 +113,7 @@ and for Maven:
 <dependency>
     <groupId>net.soundvibe</groupId>
     <artifactId>kafka-config</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
