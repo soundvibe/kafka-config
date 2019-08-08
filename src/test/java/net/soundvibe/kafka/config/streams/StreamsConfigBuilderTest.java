@@ -44,6 +44,8 @@ class StreamsConfigBuilderTest {
                 .withDefaultDeserializationExceptionHandler(TestDeserializationExceptionHandler.class)
                 .withDefaultKeySerde(Serdes.StringSerde.class)
                 .withDefaultValueSerde(Serdes.StringSerde.class)
+                .withDefaultProductionExceptionHandler(TestProductionExceptionHandler.class)
+                .withDefaultTimestampExtractor(TestTimestampExtractor.class)
                 .withMaxTaskIdle(Duration.ofSeconds(60))
                 .withNumStandbyReplicas(3)
                 .withNumStreamThreads(4)

@@ -3,8 +3,8 @@ package net.soundvibe.kafka.config.streams;
 import net.soundvibe.kafka.config.AbstractConfigBuilder;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.errors.DeserializationExceptionHandler;
-import org.apache.kafka.streams.processor.PartitionGrouper;
+import org.apache.kafka.streams.errors.*;
+import org.apache.kafka.streams.processor.*;
 import org.apache.kafka.streams.state.RocksDBConfigSetter;
 
 import java.nio.file.Path;
@@ -85,6 +85,22 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
      */
     public StreamsConfigBuilder withDefaultValueSerde(Class<? extends Serde> defaultValueSerde) {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, defaultValueSerde);
+        return this;
+    }
+
+    /**
+     * Exception handling class that implements the <code>org.apache.kafka.streams.errors.ProductionExceptionHandler</code> interface.
+     */
+    public StreamsConfigBuilder withDefaultProductionExceptionHandler(Class<? extends ProductionExceptionHandler> defaultProductionExceptionHandler) {
+        props.put(StreamsConfig.DEFAULT_PRODUCTION_EXCEPTION_HANDLER_CLASS_CONFIG, defaultProductionExceptionHandler);
+        return this;
+    }
+
+    /**
+     * Default timestamp extractor class that implements the <code>org.apache.kafka.streams.processor.TimestampExtractor</code> interface.
+     */
+    public StreamsConfigBuilder withDefaultTimestampExtractor(Class<? extends TimestampExtractor> defaultTimestampExtractor) {
+        props.put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, defaultTimestampExtractor);
         return this;
     }
 
