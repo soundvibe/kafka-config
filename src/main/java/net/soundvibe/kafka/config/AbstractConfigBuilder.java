@@ -1,7 +1,8 @@
 package net.soundvibe.kafka.config;
 
 import org.apache.kafka.clients.*;
-import org.apache.kafka.common.metrics.*;
+import org.apache.kafka.common.metrics.Sensor;
+import org.apache.kafka.common.security.auth.SecurityProtocol;
 
 import java.time.Duration;
 import java.util.*;
@@ -153,6 +154,14 @@ public class AbstractConfigBuilder<T extends AbstractConfigBuilder<T>> implement
      */
     public T withRequestTimeout(Duration requestTimeout) {
         props.put(CommonClientConfigs.REQUEST_TIMEOUT_MS_CONFIG, (int) requestTimeout.toMillis());
+        return (T) this;
+    }
+
+    /**
+     * Protocol used to communicate with brokers.
+     */
+    public T withSecurityProtocol(SecurityProtocol securityProtocol) {
+        props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, securityProtocol.name);
         return (T) this;
     }
 
