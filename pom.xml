@@ -6,7 +6,7 @@
 
     <groupId>net.soundvibe</groupId>
     <artifactId>kafka-config</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
     <name>kafka-config</name>
     <description>Typesafe configuration for Kafka clients</description>

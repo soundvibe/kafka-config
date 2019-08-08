@@ -26,8 +26,8 @@ class ProducerConfigBuilderTest {
                 .withEnableIdempotence(true)
                 .withBufferMemory(1024L * 1000L)
                 .withDeliveryTimeout(Duration.ofMinutes(10))
-                .withKeySerializer(new StringSerializer())
-                .withValueSerializer(new StringSerializer())
+                .withKeySerializer(StringSerializer.class)
+                .withValueSerializer(StringSerializer.class)
                 .withLinger(Duration.ofMinutes(1))
                 .withMaxBlock(Duration.ofSeconds(10))
                 .withPartitioner(DefaultPartitioner.class)
@@ -46,6 +46,6 @@ class ProducerConfigBuilderTest {
     }
 
     private void assertValid(Map<String, Object> properties) {
-        assertDoesNotThrow(() -> new KafkaProducer<>(properties, new StringSerializer(), new StringSerializer()));
+        assertDoesNotThrow(() -> new KafkaProducer<>(properties));
     }
 }

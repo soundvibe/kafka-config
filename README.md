@@ -41,8 +41,8 @@ public static KafkaConsumer<String,String> createConsumer() {
       .withHeartbeatInterval(Duration.ofSeconds(10))
       .withInterceptorClasses(TestConsumerInterceptor.class)
       .withIsolationLevel(IsolationLevel.READ_COMMITTED)
-      .withKeyDeserializer(new StringDeserializer())
-      .withValueDeserializer(new StringDeserializer())
+      .withKeyDeserializer(StringDeserializer.class)
+      .withValueDeserializer(StringDeserializer.class)
       .withMaxPartitionFetchBytes(1024 * 100)
       .withMaxPollInterval(Duration.ofSeconds(30))
       .withMaxPollRecords(1000)
@@ -77,8 +77,8 @@ void should_build_all_properties() {
             .withEnableIdempotence(true)
             .withBufferMemory(1024L * 1000L)
             .withDeliveryTimeout(Duration.ofMinutes(10))
-            .withKeySerializer(new StringSerializer())
-            .withValueSerializer(new StringSerializer())
+            .withKeySerializer(StringSerializer.class)
+            .withValueSerializer(StringSerializer.class)
             .withLinger(Duration.ofMinutes(1))
             .withMaxBlock(Duration.ofSeconds(10))
             .withPartitioner(DefaultPartitioner.class)
@@ -104,7 +104,7 @@ Binaries and dependency information for Maven, Ivy, Gradle and others can be fou
 Example for Gradle:
 
 ```groovy
-compile 'net.soundvibe:kafka-config:1.0.1'
+compile 'net.soundvibe:kafka-config:1.0.2'
 ```
 
 and for Maven:
@@ -113,7 +113,7 @@ and for Maven:
 <dependency>
     <groupId>net.soundvibe</groupId>
     <artifactId>kafka-config</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
