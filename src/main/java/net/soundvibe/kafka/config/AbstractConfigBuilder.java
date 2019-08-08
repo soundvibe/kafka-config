@@ -172,7 +172,9 @@ public class AbstractConfigBuilder<T extends AbstractConfigBuilder<T>> implement
     @Override
     public Properties buildProperties() {
         Properties properties = new Properties();
-        properties.putAll(props);
+        props.entrySet().stream()
+                .filter(e -> e.getValue() != null)
+                .forEach(e -> properties.put(e.getKey(), e.getValue()));
         return properties;
     }
 

@@ -65,6 +65,18 @@ class StreamsConfigBuilderTest {
         assertValid(streamProps);
     }
 
+    @Test
+    void should_set_upgrade_from_to_null() {
+        Properties streamProps = StreamsConfigBuilder.create()
+                .withBootstrapServers(BOOTSTRAP_SERVERS)
+                .withApplicationId("appId")
+                .withUpgradeFrom(null)
+                .buildProperties();
+
+        assertEquals(BOOTSTRAP_SERVERS, streamProps.getProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG));
+        assertValid(streamProps);
+    }
+
     private void assertValid(Properties properties) {
         assertDoesNotThrow(() -> new KafkaStreams(new StreamsBuilder().build(), properties));
     }
