@@ -171,7 +171,7 @@ public final class ConsumerConfigBuilder extends AbstractConfigBuilder<ConsumerC
     /**
      * Deserializer class for key that implements the <code>org.apache.kafka.common.serialization.Deserializer</code> interface.
      */
-    public ConsumerConfigBuilder withKeyDeserializer(Deserializer<?> keyDeserializer) {
+    public ConsumerConfigBuilder withKeyDeserializer(Class<? extends Deserializer> keyDeserializer) {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, keyDeserializer);
         return this;
     }
@@ -179,7 +179,7 @@ public final class ConsumerConfigBuilder extends AbstractConfigBuilder<ConsumerC
     /**
      * Deserializer class for value that implements the <code>org.apache.kafka.common.serialization.Deserializer</code> interface.
      */
-    public ConsumerConfigBuilder withValueDeserializer(Deserializer<?> valueDeserializer) {
+    public ConsumerConfigBuilder withValueDeserializer(Class<? extends Deserializer> valueDeserializer) {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, valueDeserializer);
         return this;
     }

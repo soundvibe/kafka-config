@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import java.time.Duration;
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -19,21 +20,24 @@ class ConsumerConfigBuilderTest {
     void should_set_group_id() {
         Properties properties = ConsumerConfigBuilder.create()
                 .withGroupId("test-consumer")
+                .withBootstrapServers(BOOTSTRAP_SERVERS)
                 .buildProperties();
 
+        assertEquals(BOOTSTRAP_SERVERS, properties.getProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG));
         assertEquals("test-consumer", properties.getProperty(ConsumerConfig.GROUP_ID_CONFIG));
     }
 
     private static final String BOOTSTRAP_SERVERS = "http://localhost:9876";
+    private static final String BOOTSTRAP_SERVERS2 = "http://localhost:1234";
 
     @Test
     void should_set_bootstrap_servers() {
         Properties properties = ConsumerConfigBuilder.create()
-                .withBootstrapServers(BOOTSTRAP_SERVERS)
+                .withBootstrapServers(asList(BOOTSTRAP_SERVERS, BOOTSTRAP_SERVERS2))
                 .withGroupId("test")
                 .buildProperties();
 
-        assertEquals(BOOTSTRAP_SERVERS, properties.getProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG));
+        assertEquals(BOOTSTRAP_SERVERS + "," + BOOTSTRAP_SERVERS2, properties.getProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG));
         assertValid(properties);
     }
 
@@ -56,8 +60,8 @@ class ConsumerConfigBuilderTest {
                 .withHeartbeatInterval(Duration.ofSeconds(10))
                 .withInterceptorClasses(TestConsumerInterceptor.class)
                 .withIsolationLevel(IsolationLevel.READ_COMMITTED)
-                .withKeyDeserializer(new StringDeserializer())
-                .withValueDeserializer(new StringDeserializer())
+                .withKeyDeserializer(StringDeserializer.class)
+                .withValueDeserializer(StringDeserializer.class)
                 .withMaxPartitionFetchBytes(1024 * 100)
                 .withMaxPollInterval(Duration.ofSeconds(30))
                 .withMaxPollRecords(1000)
@@ -81,10 +85,14 @@ class ConsumerConfigBuilderTest {
                 .buildProperties();
 
         assertEquals(BOOTSTRAP_SERVERS, consumerProps.getProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG));
-        assertValid(consumerProps);
+        assertValidNoSerializers(consumerProps);
     }
 
     private void assertValid(Properties properties) {
         assertDoesNotThrow(() -> new KafkaConsumer<>(properties, new StringDeserializer(), new StringDeserializer()));
+    }
+
+    private void assertValidNoSerializers(Properties properties) {
+        assertDoesNotThrow(() -> new KafkaConsumer<>(properties));
     }
 }

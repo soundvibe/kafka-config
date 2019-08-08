@@ -204,7 +204,7 @@ public final class ProducerConfigBuilder extends AbstractConfigBuilder<ProducerC
     /**
      * Serializer class for key that implements the <code>org.apache.kafka.common.serialization.Serializer</code> interface.
      */
-    public ProducerConfigBuilder withKeySerializer(Serializer<?> keySerializer) {
+    public ProducerConfigBuilder withKeySerializer(Class<? extends Serializer> keySerializer) {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializer);
         return this;
     }
@@ -212,7 +212,7 @@ public final class ProducerConfigBuilder extends AbstractConfigBuilder<ProducerC
     /**
      * Serializer class for value that implements the <code>org.apache.kafka.common.serialization.Serializer</code> interface.
      */
-    public ProducerConfigBuilder withValueSerializer(Serializer<?> valueSerializer) {
+    public ProducerConfigBuilder withValueSerializer(Class<? extends Serializer> valueSerializer) {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer);
         return this;
     }
