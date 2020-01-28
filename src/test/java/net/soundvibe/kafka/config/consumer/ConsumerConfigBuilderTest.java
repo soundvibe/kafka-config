@@ -82,6 +82,9 @@ class ConsumerConfigBuilderTest {
                 .withReconnectBackoffMax(Duration.ofMinutes(5))
                 .withRequestTimeout(Duration.ofSeconds(10))
                 .withRetryBackoff(Duration.ofSeconds(3))
+                .withSecurityProviders(TestSecurityProvider.class)
+                .withSaslMechanism("SCRAM-SHA-256")
+                .withCustom("test", "test")
                 .buildProperties();
 
         assertEquals(BOOTSTRAP_SERVERS, consumerProps.getProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG));

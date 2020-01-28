@@ -1,11 +1,15 @@
 package net.soundvibe.kafka.config;
 
 import org.apache.kafka.clients.*;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.metrics.Sensor;
-import org.apache.kafka.common.security.auth.SecurityProtocol;
+import org.apache.kafka.common.security.auth.*;
 
 import java.time.Duration;
 import java.util.*;
+
+import static java.util.stream.Collectors.joining;
 
 @SuppressWarnings("unchecked")
 public class AbstractConfigBuilder<T extends AbstractConfigBuilder<T>> implements ConfigBuilder {
@@ -173,6 +177,39 @@ public class AbstractConfigBuilder<T extends AbstractConfigBuilder<T>> implement
      */
     public T withSecurityProtocol(SecurityProtocol securityProtocol) {
         props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, securityProtocol.name);
+        return (T) this;
+    }
+
+    /**
+     * SASL mechanism used for client connections. This may be any mechanism for which a security provider is available. GSSAPI is the default mechanism.
+     */
+    public T withSaslMechanism(String saslMechanism) {
+        props.put(SaslConfigs.SASL_MECHANISM, saslMechanism);
+        return (T) this;
+    }
+
+    //new in 2.4.0
+    /**
+     * A list of configurable creator classes each returning a provider
+     * implementing security algorithms. These classes should implement the
+     * <code>org.apache.kafka.common.security.auth.SecurityProviderCreator</code> interface.
+     */
+    @SafeVarargs
+    public final T withSecurityProviders(Class<? extends SecurityProviderCreator>... securityProviders) {
+        props.put(ConsumerConfig.SECURITY_PROVIDERS_CONFIG, Arrays.stream(securityProviders)
+                .map(Class::getName)
+                .collect(joining(",")));
+        return (T) this;
+    }
+
+    /**
+     * Use custom configuration property
+     * @param name property name
+     * @param value property value
+     * @return this
+     */
+    public T withCustom(String name, String value) {
+        props.put(name, value);
         return (T) this;
     }
 
