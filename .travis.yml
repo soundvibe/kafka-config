@@ -10,6 +10,7 @@ matrix:
     - jdk: openjdk10
     - jdk: openjdk11
     - jdk: openjdk12
+    - jdk: openjdk13
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
