@@ -2,7 +2,6 @@ package net.soundvibe.kafka.config.consumer;
 
 import net.soundvibe.kafka.config.AbstractConfigBuilder;
 import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.clients.consumer.internals.PartitionAssignor;
 import org.apache.kafka.common.requests.IsolationLevel;
 import org.apache.kafka.common.serialization.Deserializer;
 
@@ -100,10 +99,11 @@ public final class ConsumerConfigBuilder extends AbstractConfigBuilder<ConsumerC
     }
 
     /**
-     * The class of the partition assignment strategy that the client will use to distribute partition ownership amongst consumer instances when group management is used.
+     * A list of class names or class types, ordered by preference, of supported assignors responsible for the partition assignment strategy that the client will use to distribute partition ownership amongst consumer instances when group management is used. Implementing the <code>org.apache.kafka.clients.consumer.ConsumerPartitionAssignor</code> interface allows you to plug in a custom assignment strategy.
      */
-    public ConsumerConfigBuilder withPartitionAssignmentStrategy(Class<? extends PartitionAssignor> partitionAssignmentStrategy) {
-        props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, Collections.singletonList(partitionAssignmentStrategy));
+    @SafeVarargs
+    public final ConsumerConfigBuilder withPartitionAssignmentStrategy(Class<? extends ConsumerPartitionAssignor>... partitionAssignmentStrategy) {
+        props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, Arrays.asList(partitionAssignmentStrategy));
         return this;
     }
 

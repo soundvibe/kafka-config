@@ -174,8 +174,10 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
     }
 
     /**
-     * Partition grouper class that implements the <code>org.apache.kafka.streams.processor.PartitionGrouper</code> interface.
+     * Partition grouper class that implements the <code>org.apache.kafka.streams.processor.PartitionGrouper</code> interface."
+     * WARNING: This config is deprecated and will be removed in 3.0.0 release.
      */
+    @Deprecated
     public StreamsConfigBuilder withPartitionGrouper(Class<? extends PartitionGrouper> partitionGrouper) {
         props.put(StreamsConfig.PARTITION_GROUPER_CLASS_CONFIG, partitionGrouper);
         return this;
