@@ -105,7 +105,7 @@ Binaries and dependency information for Maven, Ivy, Gradle and others can be fou
 Example for Gradle:
 
 ```groovy
-compile 'net.soundvibe:kafka-config:2.4.0'
+compile 'net.soundvibe:kafka-config:2.4.1'
 ```
 
 and for Maven:
@@ -114,7 +114,7 @@ and for Maven:
 <dependency>
     <groupId>net.soundvibe</groupId>
     <artifactId>kafka-config</artifactId>
-    <version>2.4.0</version>
+    <version>2.4.1</version>
 </dependency>
 ```
 

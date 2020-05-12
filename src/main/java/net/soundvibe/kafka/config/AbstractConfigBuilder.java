@@ -208,8 +208,18 @@ public class AbstractConfigBuilder<T extends AbstractConfigBuilder<T>> implement
      * @param value property value
      * @return this
      */
-    public T withCustom(String name, String value) {
+    public T withCustom(String name, Object value) {
         props.put(name, value);
+        return (T) this;
+    }
+
+    /**
+     * Use custom configuration property map
+     * @param propertyMap name-value map pairs
+     * @return this
+     */
+    public T withCustomMap(Map<String, Object> propertyMap) {
+        props.putAll(propertyMap);
         return (T) this;
     }
 
