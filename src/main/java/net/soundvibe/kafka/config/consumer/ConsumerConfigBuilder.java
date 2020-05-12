@@ -2,7 +2,7 @@ package net.soundvibe.kafka.config.consumer;
 
 import net.soundvibe.kafka.config.AbstractConfigBuilder;
 import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.common.requests.IsolationLevel;
+import org.apache.kafka.common.IsolationLevel;
 import org.apache.kafka.common.serialization.Deserializer;
 
 import java.time.Duration;
