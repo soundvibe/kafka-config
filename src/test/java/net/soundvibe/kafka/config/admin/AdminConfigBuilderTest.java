@@ -6,7 +6,7 @@ import org.apache.kafka.common.metrics.Sensor;
 import org.junit.jupiter.api.*;
 
 import java.time.Duration;
-import java.util.Properties;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +32,7 @@ class AdminConfigBuilderTest {
                 .withReconnectBackoffMax(Duration.ofSeconds(60))
                 .withRetryBackoff(Duration.ofSeconds(5))
                 .withSendBufferBytes(1024)
+                .withCustomMap(new HashMap<>())
                 .buildProperties();
 
         assertEquals(BOOTSTRAP_SERVERS, adminProps.getProperty(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG));
