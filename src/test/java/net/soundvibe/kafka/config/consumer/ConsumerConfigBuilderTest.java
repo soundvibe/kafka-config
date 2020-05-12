@@ -2,13 +2,13 @@ package net.soundvibe.kafka.config.consumer;
 
 import org.apache.kafka.clients.ClientDnsLookup;
 import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.common.IsolationLevel;
 import org.apache.kafka.common.metrics.*;
-import org.apache.kafka.common.requests.IsolationLevel;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.jupiter.api.*;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Properties;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
