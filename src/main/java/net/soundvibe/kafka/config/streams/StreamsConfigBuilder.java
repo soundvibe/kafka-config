@@ -225,4 +225,32 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
         props.put(StreamsConfig.WINDOW_STORE_CHANGE_LOG_ADDITIONAL_RETENTION_MS_CONFIG, windowStoreChangeLogAdditionalRetention.toMillis());
         return this;
     }
+
+    /**
+     * The maximum acceptable lag (number of offsets to catch up) for a client to be considered caught-up for an active task.
+     * Should correspond to a recovery time of well under a minute for a given workload. Must be at least 0.
+     */
+    public StreamsConfigBuilder withAcceptableRecoveryLag(long acceptableRecoveryLag) {
+        props.put(StreamsConfig.ACCEPTABLE_RECOVERY_LAG_CONFIG, acceptableRecoveryLag);
+        return this;
+    }
+
+    /**
+     * The maximum number of warmup replicas (extra standbys beyond the configured num.standbys) that can be assigned at once for the purpose of keeping
+     * the task available on one instance while it is warming up on another instance it has been reassigned to. Used to throttle how much extra broker
+     * traffic and cluster state can be used for high availability. Must be at least 1.
+     */
+    public StreamsConfigBuilder withMaxWarmupReplicas(int maxWarmupReplicas) {
+        props.put(StreamsConfig.MAX_WARMUP_REPLICAS_CONFIG, maxWarmupReplicas);
+        return this;
+    }
+
+    /**
+     * The maximum time to wait before triggering a rebalance to probe for warmup replicas that have finished warming up and are ready to become active. Probing rebalances
+     * will continue to be triggered until the assignment is balanced. Must be at least 1 minute.
+     */
+    public StreamsConfigBuilder withProbingRebalanceInterval(Duration probingRebalanceInterval) {
+        props.put(StreamsConfig.PROBING_REBALANCE_INTERVAL_MS_CONFIG, probingRebalanceInterval.toMillis());
+        return this;
+    }
 }

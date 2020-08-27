@@ -59,6 +59,9 @@ class StreamsConfigBuilderTest {
                 .withTopologyOptimization(TopologyOptimization.OPTIMIZE)
                 .withUpgradeFrom(UpgradeFrom.UPGRADE_FROM_11)
                 .withWindowStoreChangeLogAdditionalRetention(Duration.ofMinutes(5))
+                .withAcceptableRecoveryLag(10_000L)
+                .withMaxWarmupReplicas(2)
+                .withProbingRebalanceInterval(Duration.ofMinutes(2))
                 .buildProperties();
 
         assertEquals(BOOTSTRAP_SERVERS, streamProps.getProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG));
