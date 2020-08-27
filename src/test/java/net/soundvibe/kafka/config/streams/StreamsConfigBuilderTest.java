@@ -78,6 +78,10 @@ class StreamsConfigBuilderTest {
     }
 
     private void assertValid(Properties properties) {
-        assertDoesNotThrow(() -> new KafkaStreams(new StreamsBuilder().build(), properties));
+        assertDoesNotThrow(() -> {
+            StreamsBuilder streamsBuilder = new StreamsBuilder();
+            streamsBuilder.globalTable("test");
+            new KafkaStreams(streamsBuilder.build(), properties);
+        });
     }
 }
