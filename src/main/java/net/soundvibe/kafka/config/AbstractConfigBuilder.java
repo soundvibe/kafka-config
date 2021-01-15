@@ -202,6 +202,27 @@ public class AbstractConfigBuilder<T extends AbstractConfigBuilder<T>> implement
         return (T) this;
     }
 
+	/**
+	 * The amount of time the client will wait for the socket connection to be established.
+	 * If the connection is not built before the timeout elapses, clients will close the socket channel.
+	 * Default: 10s.
+	 */
+	public T withSocketConnectionSetupTimeout(Duration socketConnectionSetupTimeout) {
+    	props.put(CommonClientConfigs.SOCKET_CONNECTION_SETUP_TIMEOUT_MS_CONFIG, socketConnectionSetupTimeout.toMillis());
+		return (T) this;
+	}
+
+	/**
+	 * The maximum amount of time the client will wait for the socket connection to be established.
+	 * The connection setup timeout will increase exponentially for each consecutive connection failure up to this maximum.
+	 * To avoid connection storms, a randomization factor of 0.2 will be applied to the timeout resulting in a random range between 20% below and 20% above the computed value.
+	 * Default: 127s.
+	 */
+	public T withSocketConnectionSetupTimeoutMax(Duration socketConnectionSetupTimeoutMax) {
+		props.put(CommonClientConfigs.SOCKET_CONNECTION_SETUP_TIMEOUT_MAX_MS_CONFIG, socketConnectionSetupTimeoutMax.toMillis());
+		return (T) this;
+	}
+
     /**
      * Use custom configuration property
      * @param name property name
