@@ -6,6 +6,7 @@ import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledOnOs;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,12 +14,15 @@ import java.time.Duration;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
+
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StreamsConfigBuilderTest {
 
     private static final String BOOTSTRAP_SERVERS = "http://localhost:9876";
 
     @Test
+    @DisabledOnOs(WINDOWS)
     void should_build_all_properties() throws IOException {
         Properties streamProps = StreamsConfigBuilder.create()
                 .withBootstrapServers(BOOTSTRAP_SERVERS)
@@ -69,6 +73,7 @@ class StreamsConfigBuilderTest {
     }
 
     @Test
+    @DisabledOnOs(WINDOWS)
     void should_set_upgrade_from_to_null() {
         Properties streamProps = StreamsConfigBuilder.create()
                 .withBootstrapServers(BOOTSTRAP_SERVERS)

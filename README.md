@@ -4,7 +4,7 @@
 
 # kafka-config
 
-Easy to use type-safe builders for kafka clients. 
+Easy to use type-safe builders for kafka clients.
 Supports Java >= 8.
 kafka-config version aligns with kafka-client version.
 
@@ -19,7 +19,7 @@ Supported clients:
  * KafkaConsumer
  * KafkaProducer
  * KafkaStreams
- * AdminClient 
+ * AdminClient
 
 ## Examples
 ```java
@@ -105,7 +105,7 @@ Binaries and dependency information for Maven, Ivy, Gradle and others can be fou
 Example for Gradle:
 
 ```groovy
-compile 'net.soundvibe:kafka-config:2.6.0'
+compile 'net.soundvibe:kafka-config:2.6.1'
 ```
 
 and for Maven:
@@ -114,7 +114,7 @@ and for Maven:
 <dependency>
     <groupId>net.soundvibe</groupId>
     <artifactId>kafka-config</artifactId>
-    <version>2.6.0</version>
+    <version>2.6.1</version>
 </dependency>
 ```
 
