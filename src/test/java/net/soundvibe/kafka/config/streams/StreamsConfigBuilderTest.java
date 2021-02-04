@@ -22,7 +22,6 @@ class StreamsConfigBuilderTest {
     private static final String BOOTSTRAP_SERVERS = "http://localhost:9876";
 
     @Test
-    @DisabledOnOs(WINDOWS)
     void should_build_all_properties() throws IOException {
         Properties streamProps = StreamsConfigBuilder.create()
                 .withBootstrapServers(BOOTSTRAP_SERVERS)
@@ -73,7 +72,6 @@ class StreamsConfigBuilderTest {
     }
 
     @Test
-    @DisabledOnOs(WINDOWS)
     void should_set_upgrade_from_to_null() {
         Properties streamProps = StreamsConfigBuilder.create()
                 .withBootstrapServers(BOOTSTRAP_SERVERS)

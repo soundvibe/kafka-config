@@ -73,7 +73,7 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
      * Note when windowed serde class is used, one needs to set the inner serde class that implements the <code>org.apache.kafka.common.serialization.Serde</code> interface via
      * DEFAULT_WINDOWED_KEY_SERDE_INNER_CLASS or DEFAULT_WINDOWED_VALUE_SERDE_INNER_CLASS as well
      */
-    public StreamsConfigBuilder withDefaultKeySerde(Class<? extends Serde> defaultKeySerde) {
+    public StreamsConfigBuilder withDefaultKeySerde(Class<? extends Serde<?>> defaultKeySerde) {
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, defaultKeySerde);
         return this;
     }
@@ -83,7 +83,7 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
      * Note when windowed serde class is used, one needs to set the inner serde class that implements the <code>org.apache.kafka.common.serialization.Serde</code> interface via
      * DEFAULT_WINDOWED_KEY_SERDE_INNER_CLASS or DEFAULT_WINDOWED_VALUE_SERDE_INNER_CLASS as well
      */
-    public StreamsConfigBuilder withDefaultValueSerde(Class<? extends Serde> defaultValueSerde) {
+    public StreamsConfigBuilder withDefaultValueSerde(Class<? extends Serde<?>> defaultValueSerde) {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, defaultValueSerde);
         return this;
     }
@@ -143,7 +143,7 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
      * A configuration telling Kafka Streams if it should optimize the topology, disabled by default
      */
     public StreamsConfigBuilder withTopologyOptimization(TopologyOptimization topologyOptimization) {
-        props.put(StreamsConfig.TOPOLOGY_OPTIMIZATION, topologyOptimization.name);
+        props.put(StreamsConfig.TOPOLOGY_OPTIMIZATION_CONFIG, topologyOptimization.name);
         return this;
     }
 
@@ -214,7 +214,7 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
      * Default is null. Accepted values are UPGRADE_FROM_0100, UPGRADE_FROM_0101, UPGRADE_FROM_0102, UPGRADE_FROM_0110, UPGRADE_FROM_10, UPGRADE_FROM_11(for upgrading from the corresponding old version).
      */
     public StreamsConfigBuilder withUpgradeFrom(UpgradeFrom upgradeFrom) {
-        props.put(StreamsConfig.UPGRADE_FROM_CONFIG, upgradeFrom == null ? upgradeFrom : upgradeFrom.version);
+        props.put(StreamsConfig.UPGRADE_FROM_CONFIG, upgradeFrom == null ? null : upgradeFrom.version);
         return this;
     }
 

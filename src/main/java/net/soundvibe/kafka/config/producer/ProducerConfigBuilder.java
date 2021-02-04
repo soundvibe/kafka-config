@@ -101,9 +101,14 @@ public final class ProducerConfigBuilder extends AbstractConfigBuilder<ProducerC
     }
 
     /**
-     * The configuration controls how long <code>KafkaProducer.send()</code> and <code>KafkaProducer.partitionsFor()</code> will block.
-     * These methods can be blocked either because the buffer is full or metadata unavailable.
-     * Blocking in the user-supplied serializers or partitioner will not be counted against this timeout.
+     * The configuration controls how long the <code>KafkaProducer</code>'s <code>send()</code>, <code>partitionsFor()</code>, "
+	 * <code>initTransactions()</code>, <code>sendOffsetsToTransaction()</code>, <code>commitTransaction()</code> "
+	 * and <code>abortTransaction()</code> methods will block. "
+	 * For <code>send()</code> this timeout bounds the total time waiting for both metadata fetch and buffer allocation "
+	 * (blocking in the user-supplied serializers or partitioner is not counted against this timeout). "
+	 * For <code>partitionsFor()</code> this timeout bounds the time spent waiting for metadata if it is unavailable. "
+	 * The transaction-related methods always block, but may timeout if "
+	 * the transaction coordinator could not be discovered or did not respond within the timeout.
      */
     public ProducerConfigBuilder withMaxBlock(Duration maxBlock) {
         props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, maxBlock.toMillis());

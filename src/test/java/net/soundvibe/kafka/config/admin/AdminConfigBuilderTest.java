@@ -33,6 +33,8 @@ class AdminConfigBuilderTest {
                 .withRetryBackoff(Duration.ofSeconds(5))
                 .withSendBufferBytes(1024)
                 .withCustomMap(new HashMap<>())
+				.withSocketConnectionSetupTimeout(Duration.ofSeconds(15))
+				.withSocketConnectionSetupTimeoutMax(Duration.ofSeconds(30))
                 .buildProperties();
 
         assertEquals(BOOTSTRAP_SERVERS, adminProps.getProperty(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG));
