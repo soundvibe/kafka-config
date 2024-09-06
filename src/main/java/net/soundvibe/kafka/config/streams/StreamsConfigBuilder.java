@@ -2,13 +2,17 @@ package net.soundvibe.kafka.config.streams;
 
 import net.soundvibe.kafka.config.AbstractConfigBuilder;
 import org.apache.kafka.common.serialization.Serde;
+import org.apache.kafka.streams.KafkaClientSupplier;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.errors.*;
 import org.apache.kafka.streams.processor.*;
+import org.apache.kafka.streams.processor.assignment.TaskAssignor;
+import org.apache.kafka.streams.state.DslStoreSuppliers;
 import org.apache.kafka.streams.state.RocksDBConfigSetter;
 
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.List;
 
 public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsConfigBuilder> {
 
@@ -24,6 +28,14 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
      */
     public StreamsConfigBuilder withApplicationId(String applicationId) {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, applicationId);
+        return this;
+    }
+
+    /**
+     * Version of the built-in metrics to use.
+     */
+    public StreamsConfigBuilder withBuiltinMetricsVersion(String builtinMetricsVersion) {
+        props.put(StreamsConfig.BUILT_IN_METRICS_VERSION_CONFIG, builtinMetricsVersion);
         return this;
     }
 
@@ -44,6 +56,14 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
     }
 
     /**
+     * Maximum number of memory bytes to be used for statestore cache across all threads.
+     */
+    public StreamsConfigBuilder withStateStoreCacheMaxBytes(long stateStoreCacheMaxBytes) {
+        props.put(StreamsConfig.STATESTORE_CACHE_MAX_BYTES_CONFIG, stateStoreCacheMaxBytes);
+        return this;
+    }
+
+    /**
      * Maximum number of memory bytes to be used for buffering across all threads
      */
     public StreamsConfigBuilder withCacheMaxBytesBuffering(long cacheMaxBytesBuffering) {
@@ -58,6 +78,16 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
     @Override
     public StreamsConfigBuilder withClientId(String clientId) {
         return super.withClientId(clientId);
+    }
+
+    /**
+     * The frequency in milliseconds with which to delete fully consumed records from repartition topics.
+     * Purging will occur after at least this value since the last purge, but may be delayed until later.
+     * (Note, unlike <code>commit.interval.ms</code>, the default for this value remains unchanged when <code>processing.guarantee</code> is set to <code>EXACTLY_ONCE_V2</code>).
+     */
+    public StreamsConfigBuilder withRepartitionPurgeInterval(Duration repartitionPurgeInterval) {
+        props.put(StreamsConfig.REPARTITION_PURGE_INTERVAL_MS_CONFIG, repartitionPurgeInterval.toMillis());
+        return this;
     }
 
     /**
@@ -105,6 +135,14 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
     }
 
     /**
+     * Defines which store implementations to plug in to DSL operators. Must implement the <code>org.apache.kafka.streams.state.DslStoreSuppliers</code> interface.
+     */
+    public StreamsConfigBuilder withDSLStoreSupplierClass(Class<? extends DslStoreSuppliers> dslStoreSupplierClass) {
+        props.put(StreamsConfig.DSL_STORE_SUPPLIERS_CLASS_CONFIG, dslStoreSupplierClass);
+        return this;
+    }
+
+    /**
      * The number of standby replicas for each task.
      */
     public StreamsConfigBuilder withNumStandbyReplicas(int numStandbyReplicas) {
@@ -136,6 +174,34 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
      */
     public StreamsConfigBuilder withProcessingGuarantee(ProcessingGuarantee processingGuarantee) {
         props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, processingGuarantee.name);
+        return this;
+    }
+
+    /**
+     * List of client tag keys used to distribute standby replicas across Kafka Streams instances.
+     * When configured, Kafka Streams will make a best-effort to distribute
+     * the standby tasks over each client tag dimension.
+     */
+    public StreamsConfigBuilder withRackAwareAssignmentTags(List<String> rackAwareAssignmentTags) {
+        props.put(StreamsConfig.RACK_AWARE_ASSIGNMENT_TAGS_CONFIG, rackAwareAssignmentTags);
+        return this;
+    }
+
+    /**
+     * The maximum amount of time in milliseconds a task might stall due to internal errors and retries until an error is raised.
+     * For a timeout of 0ms, a task would raise an error for the first internal error.
+     * For any timeout larger than 0ms, a task will retry at least once before an error is raised.
+     */
+    public StreamsConfigBuilder withTaskTimeout(Duration taskTimeout) {
+        props.put(StreamsConfig.TASK_TIMEOUT_MS_CONFIG, taskTimeout.toMillis());
+        return this;
+    }
+
+    /**
+     * Sets window size for the deserializer in order to calculate window end times.
+     */
+    public StreamsConfigBuilder withWindowSize(Duration windowSize) {
+        props.put(StreamsConfig.WINDOW_SIZE_MS_CONFIG, windowSize.toMillis());
         return this;
     }
 
@@ -174,16 +240,6 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
     }
 
     /**
-     * Partition grouper class that implements the <code>org.apache.kafka.streams.processor.PartitionGrouper</code> interface."
-     * WARNING: This config is deprecated and will be removed in 3.0.0 release.
-     */
-    @Deprecated
-    public StreamsConfigBuilder withPartitionGrouper(Class<? extends PartitionGrouper> partitionGrouper) {
-        props.put(StreamsConfig.PARTITION_GROUPER_CLASS_CONFIG, partitionGrouper);
-        return this;
-    }
-
-    /**
      * The amount of time to block waiting for input.
      */
     public StreamsConfigBuilder withPoll(Duration poll) {
@@ -217,6 +273,53 @@ public final class StreamsConfigBuilder extends AbstractConfigBuilder<StreamsCon
         props.put(StreamsConfig.UPGRADE_FROM_CONFIG, upgradeFrom == null ? null : upgradeFrom.version);
         return this;
     }
+
+    /**
+     * Client supplier class that implements the <code>org.apache.kafka.streams.KafkaClientSupplier</code> interface.
+     */
+    public StreamsConfigBuilder withDefaultClientSupplier(Class<? extends KafkaClientSupplier> defaultClientSupplier) {
+        props.put(StreamsConfig.DEFAULT_CLIENT_SUPPLIER_CONFIG, defaultClientSupplier);
+        return this;
+    }
+
+    /**
+     * The strategy we use for rack aware assignment. Rack aware assignment will take <code>client.rack</code> and <code>racks</code> of <code>TopicPartition</code> into account when assigning
+     * tasks to minimize cross rack traffic. Valid settings are : <code>"RACK_AWARE_ASSIGNMENT_STRATEGY_NONE</code> (default), which will disable rack aware assignment; <code>RACK_AWARE_ASSIGNMENT_STRATEGY_MIN_TRAFFIC</code>,
+     * which will compute minimum cross rack traffic assignment; <code>"RACK_AWARE_ASSIGNMENT_STRATEGY_BALANCE_SUBTOPOLOGY"</code>, which will compute minimum cross rack traffic and try to balance the tasks of same subtopolgies across different clients
+     */
+    public StreamsConfigBuilder withRackAwareAssignmentStrategy(String rackAwareAssignmentStrategy) {
+        props.put(StreamsConfig.RACK_AWARE_ASSIGNMENT_STRATEGY_CONFIG, rackAwareAssignmentStrategy);
+        return this;
+    }
+
+    /**
+     * Cost associated with cross rack traffic. This config and <code>rack.aware.assignment.non_overlap_cost</code> controls whether the
+     * optimization algorithm favors minimizing cross rack traffic or minimize the movement of tasks in existing assignment. If set a larger value <code>RackAwareTaskAssignor.class.getName()</code> will
+     * optimize for minimizing cross rack traffic. The default value is null which means it will use default traffic cost values in different assignors.
+     */
+    public StreamsConfigBuilder withRackAwareAssignmentTrafficCost(int rackAwareAssignmentTrafficCost) {
+        props.put(StreamsConfig.RACK_AWARE_ASSIGNMENT_TRAFFIC_COST_CONFIG, rackAwareAssignmentTrafficCost);
+        return this;
+    }
+
+    /**
+     * Cost associated with moving tasks from existing assignment. This config and <code>RACK_AWARE_ASSIGNMENT_TRAFFIC_COST_CONFIG</code> controls whether the
+     * optimization algorithm favors minimizing cross rack traffic or minimize the movement of tasks in existing assignment. If set a larger value <code>RackAwareTaskAssignor.class.getName()</code> will
+     * optimize to maintain the existing assignment. The default value is null which means it will use default non_overlap cost values in different assignors.
+     */
+    public StreamsConfigBuilder withRackAwareAssignmentNonOverlapCost(int rackAwareAssignmentNonOverlapCost) {
+        props.put(StreamsConfig.RACK_AWARE_ASSIGNMENT_NON_OVERLAP_COST_CONFIG, rackAwareAssignmentNonOverlapCost);
+        return this;
+    }
+
+    /**
+     * A task assignor class or class name implementing the <code>TaskAssignor.class.getName()</code> interface. Defaults to the <code>HighAvailabilityTaskAssignor</code> class.
+     */
+    public StreamsConfigBuilder withTaskAssignorClass(Class<? extends TaskAssignor> taskAssignorClass) {
+        props.put(StreamsConfig.TASK_ASSIGNOR_CLASS_CONFIG, taskAssignorClass.getName());
+        return this;
+    }
+
 
     /**
      * Added to a windows maintainMs to ensure data is not deleted from the log prematurely. Allows for clock drift. Default is 1 day

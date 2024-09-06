@@ -66,6 +66,16 @@ public final class ProducerConfigBuilder extends AbstractConfigBuilder<ProducerC
     }
 
     /**
+     * Controls how long the producer will cache metadata for a topic that's idle. If the elapsed
+     * time since a topic was last produced to exceeds the metadata idle duration, then the topic's
+     * metadata is forgotten and the next access to it will force a metadata fetch request.
+     */
+    public ProducerConfigBuilder withMetadataMaxIdle(Duration metadataMaxIdle) {
+        props.put(ProducerConfig.METADATA_MAX_IDLE_CONFIG, metadataMaxIdle.toMillis());
+        return this;
+    }
+
+    /**
      * This should be larger than <code>replica.lag.time.max.ms</code> (a broker configuration)
      * to reduce the possibility of message duplication due to unnecessary producer retries.
      */
@@ -86,6 +96,36 @@ public final class ProducerConfigBuilder extends AbstractConfigBuilder<ProducerC
      */
     public ProducerConfigBuilder withDeliveryTimeout(Duration deliveryTimeout) {
         props.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, (int) deliveryTimeout.toMillis());
+        return this;
+    }
+
+    /**
+     * When set to 'true', the producer will try to adapt to broker performance and produce more messages to partitions hosted on faster brokers.
+     * If 'false', producer will try to distribute messages uniformly. Note: this setting has no effect if a custom partitioner is used.
+     */
+    public ProducerConfigBuilder withPartitionerAdaptivePartitioningEnable(boolean partitionerAdaptivePartitioningEnable) {
+        props.put(ProducerConfig.PARTITIONER_ADPATIVE_PARTITIONING_ENABLE_CONFIG, partitionerAdaptivePartitioningEnable);
+        return this;
+    }
+
+    /**
+     * If a broker cannot process produce requests from a partition for <code>PARTITIONER_AVAILABILITY_TIMEOUT_MS_CONFIG</code> time,
+     * the partitioner treats that partition as not available.  If the value is 0, this logic is disabled.
+     * Note: this setting has no effect if a custom partitioner is used or <code>PARTITIONER_ADPATIVE_PARTITIONING_ENABLE_CONFIG</code>
+     * is set to 'false'
+     */
+    public ProducerConfigBuilder withPartitionerAvailabilityTimeout(Duration partitionerAvailabilityTimeout) {
+        props.put(ProducerConfig.PARTITIONER_AVAILABILITY_TIMEOUT_MS_CONFIG, partitionerAvailabilityTimeout.toMillis());
+        return this;
+    }
+
+    /**
+     * When set to 'true' the producer won't use record keys to choose a partition.
+     * If 'false', producer would choose a partition based on a hash of the key when a key is present.
+     * Note: this setting has no effect if a custom partitioner is used.
+     */
+    public ProducerConfigBuilder withPartitionerIgnoreKeys(boolean partitionerIgnoreKeys) {
+        props.put(ProducerConfig.PARTITIONER_IGNORE_KEYS_CONFIG, partitionerIgnoreKeys);
         return this;
     }
 
@@ -134,6 +174,30 @@ public final class ProducerConfigBuilder extends AbstractConfigBuilder<ProducerC
      */
     public ProducerConfigBuilder withCompressionType(CompressionType compressionType) {
         props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, compressionType.name);
+        return this;
+    }
+
+    /**
+     * The compression level to use if `withCompressionType` is set to <code>gzip</code>.
+     */
+    public ProducerConfigBuilder withCompressionGZipLevel(int compressionGZipLevel) {
+        props.put(ProducerConfig.COMPRESSION_GZIP_LEVEL_CONFIG, compressionGZipLevel);
+        return this;
+    }
+
+    /**
+     * The compression level to use if `withCompressionType` is set to <code>lz4</code>.
+     */
+    public ProducerConfigBuilder withCompressionZ4Level(int compressionLZ4Level) {
+        props.put(ProducerConfig.COMPRESSION_LZ4_LEVEL_CONFIG, compressionLZ4Level);
+        return this;
+    }
+
+    /**
+     * The compression level to use if `withCompressionType` is set to <code>zstd</code>.
+     */
+    public ProducerConfigBuilder withCompressionZstdLevel(int compressionZstdLevel) {
+        props.put(ProducerConfig.COMPRESSION_ZSTD_LEVEL_CONFIG, compressionZstdLevel);
         return this;
     }
 

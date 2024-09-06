@@ -10,4 +10,9 @@ public class TestRocksDBConfigSetter implements RocksDBConfigSetter {
     public void setConfig(String storeName, Options options, Map<String, Object> configs) {
         //
     }
+
+    @Override
+    public void close(String storeName, Options options) {
+        //
+    }
 }

@@ -1,6 +1,7 @@
 package net.soundvibe.kafka.config.admin;
 
 import org.apache.kafka.clients.ClientDnsLookup;
+import org.apache.kafka.clients.MetadataRecoveryStrategy;
 import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.metrics.Sensor;
 import org.junit.jupiter.api.*;
@@ -21,6 +22,7 @@ class AdminConfigBuilderTest {
                 .withBootstrapServers(BOOTSTRAP_SERVERS)
                 .withRequestTimeout(Duration.ofSeconds(30))
                 .withClientId("clientId")
+                .withRebalanceTimeout(Duration.ofSeconds(30))
                 .withClientDNSLookup(ClientDnsLookup.RESOLVE_CANONICAL_BOOTSTRAP_SERVERS_ONLY)
                 .withClientRack("rack")
                 .withConnectionsMaxIdle(Duration.ofSeconds(30))
@@ -35,6 +37,9 @@ class AdminConfigBuilderTest {
                 .withCustomMap(new HashMap<>())
 				.withSocketConnectionSetupTimeout(Duration.ofSeconds(15))
 				.withSocketConnectionSetupTimeoutMax(Duration.ofSeconds(30))
+                .withMetadataRecoveryStrategy(MetadataRecoveryStrategy.NONE)
+                .withDefaultListKeySerdeInnerClass("org.apache.kafka.common.serialization.Serdes.ListSerde")
+                .withDefaultListValueSerdeInnerClass("org.apache.kafka.common.serialization.Serdes.ListSerde")
                 .buildProperties();
 
         assertEquals(BOOTSTRAP_SERVERS, adminProps.getProperty(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG));

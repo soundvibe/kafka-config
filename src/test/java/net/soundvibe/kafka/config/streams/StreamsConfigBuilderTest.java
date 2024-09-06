@@ -5,14 +5,22 @@ import org.apache.kafka.common.metrics.Sensor;
 import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.*;
+import org.apache.kafka.streams.processor.assignment.assignors.StickyTaskAssignor;
+import org.apache.kafka.streams.processor.internals.DefaultKafkaClientSupplier;
+import org.apache.kafka.streams.processor.internals.metrics.StreamsMetricsImpl;
+import org.apache.kafka.streams.state.BuiltInDslStoreSuppliers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Duration;
+import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
+import static org.apache.kafka.streams.StreamsConfig.METRICS_LATEST;
+import static org.apache.kafka.streams.StreamsConfig.RACK_AWARE_ASSIGNMENT_STRATEGY_NONE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
@@ -52,7 +60,6 @@ class StreamsConfigBuilderTest {
                 .withMaxTaskIdle(Duration.ofSeconds(60))
                 .withNumStandbyReplicas(3)
                 .withNumStreamThreads(4)
-                .withPartitionGrouper(TestPartitionGrouper.class)
                 .withPoll(Duration.ofSeconds(30))
                 .withProcessingGuarantee(ProcessingGuarantee.EXACTLY_ONCE)
                 .withReplicationFactor(3)
@@ -65,6 +72,17 @@ class StreamsConfigBuilderTest {
                 .withAcceptableRecoveryLag(10_000L)
                 .withMaxWarmupReplicas(2)
                 .withProbingRebalanceInterval(Duration.ofMinutes(2))
+                .withBuiltinMetricsVersion(METRICS_LATEST)
+                .withStateStoreCacheMaxBytes(1024)
+                .withRepartitionPurgeInterval(Duration.ofSeconds(60))
+                .withDSLStoreSupplierClass(BuiltInDslStoreSuppliers.RocksDBDslStoreSuppliers.class)
+                .withTaskTimeout(Duration.ofMinutes(1))
+                .withWindowSize(Duration.ofMinutes(5))
+                .withDefaultClientSupplier(DefaultKafkaClientSupplier.class)
+                .withRackAwareAssignmentStrategy(RACK_AWARE_ASSIGNMENT_STRATEGY_NONE)
+                .withRackAwareAssignmentTrafficCost(20)
+                .withRackAwareAssignmentNonOverlapCost(10)
+                .withTaskAssignorClass(StickyTaskAssignor.class)
                 .buildProperties();
 
         assertEquals(BOOTSTRAP_SERVERS, streamProps.getProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG));
