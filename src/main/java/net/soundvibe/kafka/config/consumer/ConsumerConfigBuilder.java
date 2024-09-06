@@ -39,6 +39,26 @@ public final class ConsumerConfigBuilder extends AbstractConfigBuilder<ConsumerC
     }
 
     /**
+     * The group protocol consumer should use. We currently
+     * support "classic" or "consumer". If "consumer" is specified, then the consumer group protocol will be
+     * used. Otherwise, the classic group protocol will be used.
+     */
+    public ConsumerConfigBuilder withGroupProtocol(GroupProtocol groupProtocol) {
+        props.put(ConsumerConfig.GROUP_PROTOCOL_CONFIG, groupProtocol.name().toLowerCase(Locale.ROOT));
+        return this;
+    }
+
+    /**
+     * The server-side assignor to use. If no assignor is specified,
+     * the group coordinator will pick one. This configuration is applied only if <code>group.protocol</code> is
+     * set to "consumer".
+     */
+    public ConsumerConfigBuilder withGroupRemoteAssignor(String groupRemoteAssignor) {
+        props.put(ConsumerConfig.GROUP_REMOTE_ASSIGNOR_CONFIG, groupRemoteAssignor);
+        return this;
+    }
+
+    /**
      * The maximum number of records returned in a single call to poll().
      */
     public ConsumerConfigBuilder withMaxPollRecords(int maxPollRecords) {

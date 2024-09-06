@@ -68,6 +68,46 @@ public class AbstractConfigBuilder<T extends AbstractConfigBuilder<T>> implement
     }
 
     /**
+     * Default inner class of list serde for key that implements the <code>org.apache.kafka.common.serialization.Serde</code> interface.
+     * This configuration will be read if and only if <code>default.key.serde</code> configuration is set to <code>org.apache.kafka.common.serialization.Serdes.ListSerde</code>
+     */
+    public T withDefaultListKeySerdeInnerClass(String defaultListKeySerdeInnerClass) {
+        props.put(CommonClientConfigs.DEFAULT_LIST_KEY_SERDE_INNER_CLASS, defaultListKeySerdeInnerClass);
+        return (T) this;
+    }
+
+    /**
+     * Default inner class of list serde for value that implements the <code>org.apache.kafka.common.serialization.Serde</code> interface.
+     * This configuration will be read if and only if <code>default.value.serde</code> configuration is set to <code>org.apache.kafka.common.serialization.Serdes.ListSerde</code>
+     */
+    public T withDefaultListValueSerdeInnerClass(String defaultListValueSerdeInnerClass) {
+        props.put(CommonClientConfigs.DEFAULT_LIST_VALUE_SERDE_INNER_CLASS, defaultListValueSerdeInnerClass);
+        return (T) this;
+    }
+
+    /**
+     * Default class for key that implements the <code>java.util.List</code> interface.
+     * This configuration will be read if and only if <code>default.key.serde</code> configuration is set to <code>org.apache.kafka.common.serialization.Serdes.ListSerde</code>
+     * Note when list serde class is used, one needs to set the inner serde class that implements the <code>org.apache.kafka.common.serialization.Serde</code> interface via
+     * `DEFAULT_LIST_KEY_SERDE_INNER_CLASS'
+     */
+    public T withDefaultListKeySerdeTypeClass(String defaultListKeySerdeTypeClass) {
+        props.put(CommonClientConfigs.DEFAULT_LIST_KEY_SERDE_TYPE_CLASS, defaultListKeySerdeTypeClass);
+        return (T) this;
+    }
+
+    /**
+     * Default class for value that implements the <code>java.util.List</code> interface.
+     * This configuration will be read if and only if <code>default.value.serde</code> configuration is set to <code>org.apache.kafka.common.serialization.Serdes.ListSerde</code>
+     * Note when list serde class is used, one needs to set the inner serde class that implements the <code>org.apache.kafka.common.serialization.Serde</code> interface via
+     * `DEFAULT_LIST_VALUE_SERDE_INNER_CLASS'
+     */
+    public T withDefaultListValueSerdeTypeClass(String defaultListValueSerdeTypeClass) {
+        props.put(CommonClientConfigs.DEFAULT_LIST_VALUE_SERDE_TYPE_CLASS, defaultListValueSerdeTypeClass);
+        return (T) this;
+    }
+
+    /**
      * The period of time after which we force a refresh of metadata even if we haven't seen any partition leadership changes to proactively discover any new brokers or partitions.
      */
     public T withMetadataMaxAge(Duration metadataMaxAge) {
@@ -80,6 +120,17 @@ public class AbstractConfigBuilder<T extends AbstractConfigBuilder<T>> implement
      */
     public T withSendBufferBytes(int sendBufferBytes) {
         props.put(CommonClientConfigs.SEND_BUFFER_CONFIG, sendBufferBytes);
+        return (T) this;
+    }
+
+    /**
+     * The maximum allowed time for each worker to join the group
+     * once a rebalance has begun. This is basically a limit on the amount of time needed for all tasks to "
+     * flush any pending data and commit offsets. If the timeout is exceeded, then the worker will be removed "
+     * from the group, which will cause offset commit failures.
+     */
+    public T withRebalanceTimeout(Duration rebalanceTimeout) {
+        props.put(CommonClientConfigs.REBALANCE_TIMEOUT_MS_CONFIG, rebalanceTimeout.toMillis());
         return (T) this;
     }
 
@@ -116,6 +167,23 @@ public class AbstractConfigBuilder<T extends AbstractConfigBuilder<T>> implement
      */
     public T withRetryBackoff(Duration retryBackoff) {
         props.put(CommonClientConfigs.RETRY_BACKOFF_MS_CONFIG, retryBackoff.toMillis());
+        return (T) this;
+    }
+
+    /**
+     * Controls how the client recovers when none of the brokers known to it is available.
+     * If set to <code>none</code>, the client fails. If set to <code>rebootstrap</code>,
+     * the client repeats the bootstrap process using <code>bootstrap.servers</code>.
+     * Rebootstrapping is useful when a client communicates with brokers so infrequently
+     * that the set of brokers may change entirely before the client refreshes metadata.
+     * Metadata recovery is triggered when all last-known brokers appear unavailable simultaneously.
+     * Brokers appear unavailable when disconnected and no current retry attempt is in-progress.
+     * Consider increasing <code>reconnect.backoff.ms</code> and <code>reconnect.backoff.max.ms</code> and
+     * decreasing <code>socket.connection.setup.timeout.ms</code> and <code>socket.connection.setup.timeout.max.ms</code>
+     * for the client.
+     */
+    public T withMetadataRecoveryStrategy(MetadataRecoveryStrategy metadataRecoveryStrategy) {
+        props.put(CommonClientConfigs.METADATA_RECOVERY_STRATEGY_CONFIG, metadataRecoveryStrategy.name);
         return (T) this;
     }
 

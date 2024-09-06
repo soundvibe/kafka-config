@@ -22,7 +22,8 @@ class ProducerConfigBuilderTest {
                 .withBootstrapServers(BOOTSTRAP_SERVERS)
                 .withAcks(Acks.ALL)
                 .withBatchSize(10)
-                .withCompressionType(CompressionType.SNAPPY)
+                .withCompressionType(CompressionType.ZSTD)
+                .withCompressionZstdLevel(3)
                 .withEnableIdempotence(true)
                 .withBufferMemory(1024L * 1000L)
                 .withDeliveryTimeout(Duration.ofMinutes(10))
@@ -39,6 +40,10 @@ class ProducerConfigBuilderTest {
                 .withClientId("clientId")
                 .withMaxInFlightRequestsPerConnection(5)
                 .withInterceptorClasses(TestProducerInterceptor.class)
+                .withMetadataMaxIdle(Duration.ofSeconds(30))
+                .withPartitionerAdaptivePartitioningEnable(false)
+                .withPartitionerAvailabilityTimeout(Duration.ofSeconds(30))
+                .withPartitionerIgnoreKeys(true)
                 .buildMap();
 
         assertEquals(BOOTSTRAP_SERVERS, producerProps.get(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG));
